@@ -1,5 +1,6 @@
 package com.guimarobo.Fintrack.service;
 
+import com.guimarobo.Fintrack.exception.NotFoundException;
 import com.guimarobo.Fintrack.model.Account;
 import com.guimarobo.Fintrack.model.User;
 import com.guimarobo.Fintrack.repository.AccountRepository;
@@ -26,14 +27,20 @@ public class AccountService {
 
     public Account getAccountById(Long id) {
         return accountRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada."));
+                .orElseThrow(() -> new NotFoundException("Conta não encontrada"));
     }
 
     @Transactional
     public Account createAccount(Account account) {
+
+        if (account.getUser() == null || account.getUser().getId() == null) {
+            throw new NotFoundException("Usuário da conta não informado");
+        }
+
         Long userId = account.getUser().getId();
+
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
 
         account.setUser(user);
         return accountRepository.save(account);
@@ -41,16 +48,27 @@ public class AccountService {
 
     @Transactional
     public Account updateAccount(Long id, Account updatedAccount) {
+
         Account existingAccount = getAccountById(id);
+
+        if (updatedAccount.getUser() == null || updatedAccount.getUser().getId() == null) {
+            throw new NotFoundException("Usuário da conta não informado");
+        }
+
+        User user = userRepository.findById(updatedAccount.getUser().getId())
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+
         existingAccount.setBankName(updatedAccount.getBankName());
         existingAccount.setAccountType(updatedAccount.getAccountType());
         existingAccount.setBalance(updatedAccount.getBalance());
-        existingAccount.setUser(updatedAccount.getUser());
+        existingAccount.setUser(user);
+
         return accountRepository.save(existingAccount);
     }
 
     @Transactional
     public void deleteAccount(Long id) {
-        accountRepository.deleteById(id);
+        Account account = getAccountById(id);
+        accountRepository.delete(account);
     }
 }

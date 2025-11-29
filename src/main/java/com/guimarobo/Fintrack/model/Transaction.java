@@ -3,24 +3,33 @@ package com.guimarobo.Fintrack.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "transactions")
+@Table(name = "transactions") // criacao table db
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto incremento
     private Long id;
 
+    @NotBlank(message = "A descrição é obrigatória.")
     private String description;
+
+    @NotNull(message = "O valor (amount) é obrigatório.")
     private BigDecimal amount;
-    private String type; // INCOME ou EXPENSE - Renda ou Despesa
+
+    @NotBlank(message = "O tipo da transação é obrigatório (DESPESA ou ENTRADA).")
+    private String type; // ENTRADA ou DESPESA
+
+    @NotNull(message = "A data é obrigatória.")
     private LocalDate date;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
+    @NotNull(message = "A conta relacionada (account) é obrigatória.")
+    @ManyToOne // relacionamento muitos pra um
+    @JoinColumn(name = "account_id") // chave estrangeira
     @JsonIgnoreProperties({"transactions"}) // evitar loop
     private Account account;
 

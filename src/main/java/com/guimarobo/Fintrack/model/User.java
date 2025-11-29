@@ -3,8 +3,11 @@ package com.guimarobo.Fintrack.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
 import lombok.Generated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -15,7 +18,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "O nome é obrigatório.")
     private String name;
+
+    @NotBlank(message = "O e-mail é obrigatório.")
+    @Email(message = "O e-mail informado não é válido.")
     private String email;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

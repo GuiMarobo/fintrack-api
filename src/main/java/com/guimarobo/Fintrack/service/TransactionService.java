@@ -1,5 +1,6 @@
 package com.guimarobo.Fintrack.service;
 
+import com.guimarobo.Fintrack.exception.NotFoundException;
 import com.guimarobo.Fintrack.model.Transaction;
 import com.guimarobo.Fintrack.repository.AccountRepository;
 import com.guimarobo.Fintrack.repository.TransactionRepository;
@@ -25,37 +26,76 @@ public class TransactionService {
 
     public Transaction getTransactionById(Long id){
         return transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transação não encontrada"));
+                .orElseThrow(() -> new NotFoundException("Transação não encontrada"));
     }
 
+    @Transactional
     public Transaction createTransaction(Transaction transaction) {
+
         Long accountId = transaction.getAccount().getId();
 
         var account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+                .orElseThrow(() -> new NotFoundException("Conta não encontrada"));
+
+        applyBalanceChange(account, transaction.getType(), transaction.getAmount());
+
+        accountRepository.save(account);
+
         transaction.setAccount(account);
         return transactionRepository.save(transaction);
     }
 
     @Transactional
     public Transaction updateTransaction(Long id, Transaction updatedTransaction) {
+
         Transaction existingTransaction = getTransactionById(id);
+
+        var account = accountRepository.findById(updatedTransaction.getAccount().getId())
+                .orElseThrow(() -> new NotFoundException("Conta não encontrada"));
+
+        revertBalanceChange(account, existingTransaction.getType(), existingTransaction.getAmount());
 
         existingTransaction.setDescription(updatedTransaction.getDescription());
         existingTransaction.setAmount(updatedTransaction.getAmount());
         existingTransaction.setType(updatedTransaction.getType());
         existingTransaction.setDate(updatedTransaction.getDate());
-
-        Long accountId = updatedTransaction.getAccount().getId();
-        var account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
-
         existingTransaction.setAccount(account);
+
+        applyBalanceChange(account, updatedTransaction.getType(), updatedTransaction.getAmount());
+
+        accountRepository.save(account);
+
         return transactionRepository.save(existingTransaction);
     }
 
     @Transactional
     public void deleteTransaction(Long id){
+
+        Transaction transaction = getTransactionById(id);
+
+        var account = transaction.getAccount();
+
+        revertBalanceChange(account, transaction.getType(), transaction.getAmount());
+
+        accountRepository.save(account);
+
         transactionRepository.deleteById(id);
     }
- }
+
+
+    private void applyBalanceChange(com.guimarobo.Fintrack.model.Account account, String type, java.math.BigDecimal amount) {
+        if (type.equalsIgnoreCase("DESPESA")) {
+            account.setBalance(account.getBalance().subtract(amount));
+        } else if (type.equalsIgnoreCase("ENTRADA")) {
+            account.setBalance(account.getBalance().add(amount));
+        }
+    }
+
+    private void revertBalanceChange(com.guimarobo.Fintrack.model.Account account, String type, java.math.BigDecimal amount) {
+        if (type.equalsIgnoreCase("DESPESA")) {
+            account.setBalance(account.getBalance().add(amount));
+        } else if (type.equalsIgnoreCase("ENTRADA")) {
+            account.setBalance(account.getBalance().subtract(amount));
+        }
+    }
+}

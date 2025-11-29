@@ -3,26 +3,36 @@ package com.guimarobo.Fintrack.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
 @Table(name = "accounts")
 public class Account {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto incremento
     private Long id;
 
+    @NotBlank(message = "O nome do banco é obrigatório")
     private String bankName;
+
+    @NotBlank(message = "O tipo da conta é obrigatório")
     private String accountType; // Corrente, poupança....
+
+    @NotNull(message = "O saldo inicial é obrigatório")
     private BigDecimal balance;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne // relacionamento muitos pra um
+    @JoinColumn(name = "user_id", nullable = false) // chave estrangeira, nao pode ser null
     @JsonIgnoreProperties("accounts") // evitar loop
+    @NotNull(message = "O usuário da conta é obrigatório")
     private User user;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL) // um pra muitos, se apagar conta deleta transactinos
     @JsonIgnoreProperties("accounts") // evitar loop
     private List<Transaction> transactions;
 
