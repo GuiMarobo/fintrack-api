@@ -32,6 +32,10 @@ public class TransactionService {
     @Transactional
     public Transaction createTransaction(Transaction transaction) {
 
+        if (transaction.getAccount() == null || transaction.getAccount().getId() == null) {
+            throw new IllegalArgumentException("A conta relacionada é obrigatória.");
+        }
+
         Long accountId = transaction.getAccount().getId();
 
         var account = accountRepository.findById(accountId)
@@ -88,6 +92,8 @@ public class TransactionService {
             account.setBalance(account.getBalance().subtract(amount));
         } else if (type.equalsIgnoreCase("ENTRADA")) {
             account.setBalance(account.getBalance().add(amount));
+        } else {
+            throw new IllegalArgumentException("Tipo de transação inválido: '" + type + "'. Use 'DESPESA' ou 'ENTRADA'.");
         }
     }
 
@@ -96,6 +102,8 @@ public class TransactionService {
             account.setBalance(account.getBalance().add(amount));
         } else if (type.equalsIgnoreCase("ENTRADA")) {
             account.setBalance(account.getBalance().subtract(amount));
+        } else {
+            throw new IllegalArgumentException("Tipo de transação inválido: '" + type + "'. Use 'DESPESA' ou 'ENTRADA'.");
         }
     }
 }

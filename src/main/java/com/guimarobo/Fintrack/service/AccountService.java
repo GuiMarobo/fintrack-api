@@ -34,13 +34,13 @@ public class AccountService {
     public Account createAccount(Account account) {
 
         if (account.getUser() == null || account.getUser().getId() == null) {
-            throw new NotFoundException("Usuário da conta não informado");
+            throw new IllegalArgumentException("Usuário da conta não informado.");
         }
 
         Long userId = account.getUser().getId();
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado."));
 
         account.setUser(user);
         return accountRepository.save(account);
@@ -52,11 +52,11 @@ public class AccountService {
         Account existingAccount = getAccountById(id);
 
         if (updatedAccount.getUser() == null || updatedAccount.getUser().getId() == null) {
-            throw new NotFoundException("Usuário da conta não informado");
+            throw new IllegalArgumentException("Usuário da conta não informado.");
         }
 
         User user = userRepository.findById(updatedAccount.getUser().getId())
-                .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado."));
 
         existingAccount.setBankName(updatedAccount.getBankName());
         existingAccount.setAccountType(updatedAccount.getAccountType());
