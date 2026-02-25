@@ -1,7 +1,6 @@
 package com.guimarobo.Fintrack.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,8 +31,8 @@ public class Account {
     @NotNull(message = "O usuário da conta é obrigatório")
     private User user;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL) // um pra muitos, se apagar conta deleta transactinos
-    @JsonIgnoreProperties("accounts") // evitar loop
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("account")
     private List<Transaction> transactions;
 
     public Account() {}
@@ -100,8 +99,6 @@ public class Account {
                 ", bankName='" + bankName + '\'' +
                 ", accountType='" + accountType + '\'' +
                 ", balance=" + balance +
-                ", user=" + user +
-                ", transactions=" + transactions +
                 '}';
     }
 }

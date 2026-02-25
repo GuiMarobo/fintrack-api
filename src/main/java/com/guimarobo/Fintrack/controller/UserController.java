@@ -3,10 +3,12 @@ package com.guimarobo.Fintrack.controller;
 import com.guimarobo.Fintrack.model.User;
 import com.guimarobo.Fintrack.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -41,14 +43,21 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         User createdUser = userService.save(user);
-        return ResponseEntity.status(201).body(createdUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     // PUT - Atualizar usuário existente
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User updatedUser) {
         User savedUser = userService.update(id, updatedUser);
         return ResponseEntity.ok(savedUser);
+    }
+
+    // PATCH - Atualizar parcialmente usuário
+    @PatchMapping("/{id}")
+    public ResponseEntity<User> patchUser(@PathVariable Long id, @RequestBody Map<String, String> fields) {
+        User updatedUser = userService.patch(id, fields);
+        return ResponseEntity.ok(updatedUser);
     }
 
     // DELETE - Deletar usuário por ID

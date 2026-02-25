@@ -1,6 +1,5 @@
 package com.guimarobo.Fintrack.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -19,6 +18,7 @@ public class Transaction {
     private String description;
 
     @NotNull(message = "O valor (amount) é obrigatório.")
+    @jakarta.validation.constraints.DecimalMin(value = "0.01", message = "O valor da transação deve ser maior que zero.")
     private BigDecimal amount;
 
     @NotBlank(message = "O tipo da transação é obrigatório (DESPESA ou ENTRADA).")
@@ -100,7 +100,6 @@ public class Transaction {
                 ", amount=" + amount +
                 ", type='" + type + '\'' +
                 ", date=" + date +
-                ", account=" + account +
                 '}';
     }
 }

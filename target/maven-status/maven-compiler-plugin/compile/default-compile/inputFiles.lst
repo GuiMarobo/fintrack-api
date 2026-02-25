@@ -1,0 +1,16 @@
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/FintrackApplication.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/controller/AccountController.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/controller/TransactionController.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/controller/UserController.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/exception/ErrorResponse.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/exception/GlobalExceptionHandler.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/exception/NotFoundException.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/model/Account.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/model/Transaction.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/model/User.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/repository/AccountRepository.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/repository/TransactionRepository.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/repository/UserRepository.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/service/AccountService.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/service/TransactionService.java
+/Users/guimaroboo/Desktop/fintrack-api/src/main/java/com/guimarobo/Fintrack/service/UserService.java
