@@ -1,1 +1,25 @@
+# IDEs
 .idea/
+*.iml
+.vscode/
+
+# Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+.env
+*.env.local
+application-local.properties
+application-secret.properties
